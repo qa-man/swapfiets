@@ -1,0 +1,280 @@
+{
+	"info": {
+		"_postman_id": "0228120a-49d0-44a0-9258-d7292c2fcc8f",
+		"name": "Cat Facts API",
+		"description": "This API provides endpoints to get random cat facts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10051181"
+	},
+	"item": [
+		{
+			"name": "breeds",
+			"item": [
+				{
+					"name": "Returns a list of breeds",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var schema = {\r",
+									"    type: \"object\",\r",
+									"    properties:{\r",
+									"        \"data\":{\"type\": \"array\"},\r",
+									"        properties:{\r",
+									"            \"breed\":{\"type\": \"string\"},\r",
+									"            \"country\":{\"type\": \"string\"},\r",
+									"            \"origin\":{\"type\": \"string\"},\r",
+									"            \"coat\":{\"type\": \"string\"},\r",
+									"            \"pattern\":{\"type\": \"string\"},\r",
+									"        }\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.test('Schema is valid', function () {\r",
+									"    pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://catfact.ninja/breeds?limit={{max_limit}}",
+							"protocol": "https",
+							"host": [
+								"catfact",
+								"ninja"
+							],
+							"path": [
+								"breeds"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "{{max_limit}}"
+								}
+							]
+						},
+						"description": "returns a list of breeds"
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for breeds"
+		},
+		{
+			"name": "fact",
+			"item": [
+				{
+					"name": "Returns a random cat fact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var schema = {\r",
+									"    type: \"object\",\r",
+									"    properties:{\r",
+									"        \"fact\":{\"type\": \"string\"},\r",
+									"        \"length\":{\"type\": \"number\"}\r",
+									"    }\r",
+									"};\r",
+									"\r",
+									"pm.test('Schema is valid', function () {\r",
+									"    pm.expect(tv4.validate(pm.response.json(), schema)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.globals.set(\"max_length\", jsonData[\"length\"]);\r",
+									"pm.globals.set(\"random_fact\", jsonData.fact);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://catfact.ninja/fact?max_length={{max_length}}",
+							"protocol": "https",
+							"host": [
+								"catfact",
+								"ninja"
+							],
+							"path": [
+								"fact"
+							],
+							"query": [
+								{
+									"key": "max_length",
+									"value": "{{max_length}}"
+								}
+							]
+						},
+						"description": "returns a random cat fact"
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for fact",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "facts",
+			"item": [
+				{
+					"name": "Get a list of cat facts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonData = pm.response.json();\r",
+									"let expectedFact = pm.globals.get(\"random_fact\");\r",
+									"pm.test('Response contains random fact with max length', () => {\r",
+									"    pm.expect(jsonData[\"data\"].some(a => a.fact === expectedFact)).to.be.true;\r",
+									"    });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "https://catfact.ninja/facts?limit={{max_limit}}&max_length={{max_length}}",
+							"protocol": "https",
+							"host": [
+								"catfact",
+								"ninja"
+							],
+							"path": [
+								"facts"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "{{max_limit}}"
+								},
+								{
+									"key": "max_length",
+									"value": "{{max_length}}"
+								}
+							]
+						},
+						"description": "Get a list of cat facts"
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for facts",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status code is 200\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"",
+					"pm.test(\"Response must be valid and have a body\", function () {",
+					"    pm.response.to.be.ok;",
+					"    pm.response.to.not.be.error;",
+					"    pm.response.to.be.withBody;",
+					"    pm.response.to.be.json;",
+					"    pm.response.to.not.have.jsonBody(\"error\");",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "max_length",
+			"value": "387",
+			"type": "string"
+		},
+		{
+			"key": "max_limit",
+			"value": "332",
+			"type": "string"
+		},
+		{
+			"key": "random_fact",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
